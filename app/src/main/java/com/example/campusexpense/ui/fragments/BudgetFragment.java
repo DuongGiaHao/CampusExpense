@@ -57,7 +57,7 @@ public class BudgetFragment extends Fragment {
         emptyView = view.findViewById(R.id.emptyView);
         emptyView = view.findViewById(R.id.emptyView);
         sharedPreferences = requireContext().getSharedPreferences("UserSession", 0);
-        currentUserId = sharedPreferences.getInt("UserId", -1);
+        currentUserId = sharedPreferences.getInt("userId", -1);
         AppDatabase database = AppDatabase.getInstance(requireContext());
         budgetDao = database.budgetDao();
         categoryDao = database.categoryDao();

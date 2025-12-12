@@ -36,4 +36,11 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return instance;
     }
+    public void clearAllTables() {
+        if (instance != null) {
+            new Thread(() -> {
+                instance.clearAllTables();
+            }).start();
+        }
+    }
 }

@@ -44,4 +44,8 @@ public interface ExpenseDao {
 
     @Query("SELECT COUNT(*) FROM expenses WHERE userId = :userId AND date >= :startDate AND date <= :endDate")
     int getExpenseCountByDateRange(int userId, long startDate, long endDate);
+    @Query("SELECT IFNULL(SUM(amount), 0) * 1.0 / COUNT(DISTINCT date(date / 1000, 'unixepoch')) " +
+            "FROM expenses WHERE userId = :userId")
+    double getAverageExpensePerDay(int userId);
+
 }

@@ -16,6 +16,7 @@ public interface BudgetDao {
     long insert(Budget budget);
     @Update
     void update(Budget budget);
+    
     @Delete
     void delete(Budget budget);
     @Query("SELECT * FROM budgets WHERE UserId = :userId ORDER BY createdAt DESC")
@@ -24,5 +25,14 @@ public interface BudgetDao {
     Budget getBudgetByCategoryAndUser(int userId, int categoryId);
     @Query("SELECT * FROM budgets WHERE id = :id")
     Budget getBydId(int id);
+    @Query("SELECT COUNT(*) FROM budgets WHERE UserId = :userId")
+    int getBudgetCount(int userId);
 
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM budgets WHERE UserId = :userId")
+    double getTotalBudget(int userId);
+
+    @Query("SELECT IFNULL(SUM(b.amount), 0) " +
+            "FROM budgets b JOIN categories c ON b.categoryId = c.id " +
+            "WHERE b.userId = :userId AND c.name = :categoryName")
+    double getTotalBudgetByCategoryName(int userId, String categoryName);
 }
