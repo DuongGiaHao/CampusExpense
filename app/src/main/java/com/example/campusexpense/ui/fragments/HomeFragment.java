@@ -46,7 +46,6 @@ public class HomeFragment extends Fragment {
 
     private int userId = -1;
     private String username = "";
-    private double Expense = 0.0;
 
     public HomeFragment() {}
 
@@ -134,17 +133,20 @@ public class HomeFragment extends Fragment {
                 double totalExpense = (totalExpenseObj != null) ? totalExpenseObj : 0.0;
 
                 int transactionCount = expenseDao.getExpenseCountByDateRange(userId, startDate, endDate);
-                Expense avgPerDay = expenseDao.getExpenseById(userId);
 
-                // Calculate Total Budget manually from list to ensure accuracy
-                List<Budget> allBudgets = budgetDao.getBudgetByUser(userId);
-                double totalBudget = 0.0;
-                if (allBudgets != null) {
-                    for (Budget b : allBudgets) {
-                        totalBudget += b.getAmount();
-                    }
+                // Calculate Avg/Day
+                double avgPerDay;
+                int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                if (dayOfMonth > 0) {
+                    avgPerDay = totalExpense / dayOfMonth;
+                } else {
+                    avgPerDay = 0.0;
                 }
-                int budgetCount = (allBudgets != null) ? allBudgets.size() : 0;
+
+                // Use DAO methods to get budget info
+                double totalBudget = budgetDao.getTotalBudget(userId);
+                int budgetCount = budgetDao.getBudgetCount(userId);
+                List<Budget> allBudgets = budgetDao.getBudgetByUser(userId); // still needed for fallback
 
                 double remaining = totalBudget - totalExpense;
 
@@ -198,7 +200,7 @@ public class HomeFragment extends Fragment {
                 String finalCategoryName = categoryName;
                 double finalCategoryBudgetAmount = categoryBudgetAmount;
                 double finalCategorySpent = categorySpent;
-                double finalAvgPerDay = Expense;
+                double finalAvgPerDay = avgPerDay;
                 double finalTotalBudget = totalBudget;
                 double finalRemaining = remaining;
 

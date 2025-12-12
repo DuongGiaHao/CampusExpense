@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.campusexpense.MainActivity;
 import com.example.campusexpense.R;
+import com.example.campusexpense.data.database.AppDatabase;
 import com.example.campusexpense.ui.auth.LoginActivity;
 
 public class AccountFragment extends Fragment {
@@ -57,9 +58,16 @@ public class AccountFragment extends Fragment {
         return view;
     }
     private void logout(){
+        // Clear the database
+        AppDatabase database = AppDatabase.getInstance(requireContext());
+        database.clearAllTables();
+
+        // Clear shared preferences
         SharedPreferences.Editor editor = sharePreferences.edit();
         editor.clear();
         editor.apply();
+
+        // Navigate to LoginActivity
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
